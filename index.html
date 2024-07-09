@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Trình phát âm thanh đơn giản</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    .audio-player {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .audio-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .audio-controls button {
+      margin: 0 5px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #ddd;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .audio-controls button:hover {
+      background-color: #ccc;
+    }
+
+    #audio-info {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    #audio-name {
+      margin-right: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    #audio-duration {
+      margin-left: 10px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    #audio-progress {
+      width: 100%;
+      height: 5px;
+      background-color: #eee;
+      margin-top: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #audio-progress-bar {
+      height: 100%;
+      background-color: #007bff;
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+
+    #audio {
+      width: 100%;
+    }
+
+    #inputSrc {
+      display: none;
+    }
+
+    #audio-drop-area {
+      width: 100%;
+      height: 100px;
+      border: 2px dashed #ccc;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      cursor: pointer;
+      background-color: #f5f5f5;
+    }
+
+    #audio-drop-area.highlight {
+      border-color: #007bff;
+    }
+
+    #audio-drop-area.highlight .drop-text {
+      color: #007bff;
+    }
+
+    #audio-drop-area.highlight .drop-icon {
+      fill: #007bff;
+    }
+
+    .drop-text {
+      font-size: 18px;
+      color: #888;
+    }
+
+    .drop-icon {
+      fill: #ccc;
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    #audio-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    #audio-list li {
+      margin-bottom: 5px;
+    }
+
+    #audio-list li a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="audio-player">
+    <h2>Trình phát âm thanh</h2>
+    <audio id="audio" controls="" style="width: 100%;">
+      <source id="audio-source" src="" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button onclick="rewind(5)">Rewind 5s (X|C|V)</button></button>
+      <button onclick="rewind(10)">Rewind 10s (B)</button>
+      <button onclick="rewind(-10)">Next 10s (N)</button>
+      <button onclick="rewind(-30)">Next 30s (M)</button>
+      <button onclick="togglePause()">Pause/Play (SPACE)</button>
+    </div>
+
+    <div id="audio-info">
+      <span id="audio-name">Trình phát trống.mp3</span>
+      <span id="audio-duration">0:00 / 0:00</span>
+    </div>
+    <div id="audio-progress">
+      <div id="audio-progress-bar"></div>
+    </div>
+
+    <input type="text" name="" id="inputSrc" placeholder="Nhập đường dẫn đến file âm thanh...">
+
+    <div id="audio-drop-area">
+      <svg class="drop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16.2V7.8c0-3-2.5-5.5-5.5-5.5S8 2.3 8 5.8v10.4c0 3 2.5 5.5 5.5 5.5S21 19.2 21 16.2z"></path>
+        <path d="M10.7 17.9l-6.1-6.1c-.8-.8-.8-2 0-2.8l6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l-6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0z"></path>
+      </svg>
+      <span class="drop-text">Kéo thả file âm thanh vào đây</span>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const audioName = document.getElementById('audio-name');
+    const audioDuration = document.getElementById('audio-duration');
+    const audioProgress = document.getElementById('audio-progress');
+    const audioProgressBar = document.getElementById('audio-progress-bar');
+    const inputSrc = document.getElementById('inputSrc');
+    const audioSource = document.getElementById('audio-source');
+    const audioDropArea = document.getElementById('audio-drop-area');
+
+    audioDropArea.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      audioDropArea.classList.add('highlight');
+    });
+
+    audioDropArea.addEventListener('dragleave', () => {
+      audioDropArea.classList.remove('highlight');
+    });
+
+    audioDropArea.addEventListener('drop', (event) => {
+      event.preventDefault();
+      audioDropArea.classList.remove('highlight');
+
+      const file = event.dataTransfer.files[0];
+
+      if (file.type.startsWith('audio/')) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          audioSource.src = e.target.result;
+          audioName.textContent = file.name;
+          audio.load();
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        alert('Vui lòng kéo thả file âm thanh!');
+      }
+    });
+
+    inputSrc.addEventListener('input', () => {
+      if (!inputSrc.value) {
+        audioSource.src = "41-70 PART 3 TRÊN LỚP.mp3";
+        audioName.textContent = "41-70 PART 3 TRÊN LỚP.mp3";
+      } else {
+        audioSource.src = inputSrc.value + ".mp3";
+        audioName.textContent = inputSrc.value + ".mp3";
+      }
+      audio.load();
+    });
+
+    audio.onloadedmetadata = () => {
+      const minutes = Math.floor(audio.duration / 60);
+      const seconds = Math.floor(audio.duration % 60);
+      audioDuration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} / ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+      audio.ontimeupdate = () => {
+        const percentage = (audio.currentTime / audio.duration) * 100;
+        audioProgressBar.style.width = `${percentage}%`;
+
+        const currentMinutes = Math.floor(audio.currentTime / 60);
+        const currentSeconds = Math.floor(audio.currentTime % 60);
+        audioDuration.textContent = `${currentMinutes}:${currentSeconds.toString().padStart(2, '0')} / ${minutes}:${seconds.toString().padStart(2, '0')}`;
+      };
+    };
+
+    function rewind(seconds) {
+      audio.currentTime -= seconds;
+    }
+
+    function togglePause() {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    // Xử lý sự kiện bàn phím
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Space') {
+        togglePause();
+        event.preventDefault();
+      } else if (event.code === 'KeyX' ||
+				event.code === 'KeyC' ||
+				event.code === 'KeyV') {
+        rewind(5);
+      } else if (event.code === 'KeyB') {
+        rewind(10);
+      } else if (event.code === 'KeyN') {
+        rewind(-10);
+      } else if (event.code === 'KeyM') {
+        rewind(-30);
+      }
+    });
+  </script>
+
+</body>
+
+</html>
