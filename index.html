@@ -35,8 +35,9 @@
     }
 
     .audio-controls button {
+      width: 30%;
       margin: 0 5px;
-      padding: 8px 11px;
+      padding: 8px 10px;
       border: none;
       border-radius: 5px;
       background-color: #ddd;
@@ -154,11 +155,11 @@
       Your browser does not support the audio element.
     </audio>
     <div class="audio-controls">
-      <button onclick="rewind(10)">Rewind 10s (Z)</button>
-      <button onclick="rewind(5)">Rewind 5s (X|C|V)</button>
-      <button onclick="rewind(-10)">Next 10s (N)</button>
-      <button onclick="rewind(-30)">Next 30s (M)</button>
-      <button onclick="togglePause()">Pause/Play (SPACE)</button>
+      <button onclick="rewind(10)">Rewind 10s<br>(Z)</button>
+      <button onclick="rewind(5)">Rewind 5s<br>(X | C | V)</button>
+      <button onclick="togglePause()">Pause/Play<br>(SPACE)</button>
+      <button onclick="rewind(-10)">Next 10s<br>(N)</button>
+      <button onclick="rewind(-30)">Next 30s<br>(M)</button>
     </div>
 
     <div id="audio-info">
@@ -172,9 +173,12 @@
     <input type="text" name="" id="inputSrc" placeholder="Nhập đường dẫn đến file âm thanh...">
 
     <div id="audio-drop-area">
-      <svg class="drop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg class="drop-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 16.2V7.8c0-3-2.5-5.5-5.5-5.5S8 2.3 8 5.8v10.4c0 3 2.5 5.5 5.5 5.5S21 19.2 21 16.2z"></path>
-        <path d="M10.7 17.9l-6.1-6.1c-.8-.8-.8-2 0-2.8l6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l-6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0z"></path>
+        <path
+          d="M10.7 17.9l-6.1-6.1c-.8-.8-.8-2 0-2.8l6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l-6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0l6.1 6.1c.8.8 2 .8 2.8 0l-6.1-6.1c.8-.8 2-.8 2.8 0z">
+        </path>
       </svg>
       <span class="drop-text">Kéo thả file âm thanh vào đây</span>
     </div>
@@ -247,7 +251,13 @@
     };
 
     function rewind(seconds) {
-      audio.currentTime -= seconds;
+      if (seconds > 0) {
+        if (seconds <= audio.currentTime)
+          audio.currentTime -= seconds;
+        else {
+          audio.currentTime = 0;
+        }
+      }
     }
 
     function togglePause() {
@@ -264,8 +274,8 @@
         togglePause();
         event.preventDefault();
       } else if (event.code === 'KeyX' ||
-				event.code === 'KeyC' ||
-				event.code === 'KeyV') {
+        event.code === 'KeyC' ||
+        event.code === 'KeyV') {
         rewind(5);
       } else if (event.code === 'KeyZ') {
         rewind(10);
