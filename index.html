@@ -257,6 +257,8 @@
         else {
           audio.currentTime = 0;
         }
+      } else if (audio.duration > audio.currentTime - seconds){
+        audio.currentTime -= seconds;
       }
     }
 
