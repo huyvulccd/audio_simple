@@ -36,7 +36,7 @@
 
     .audio-controls button {
       margin: 0 5px;
-      padding: 8px 15px;
+      padding: 8px 11px;
       border: none;
       border-radius: 5px;
       background-color: #ddd;
@@ -154,8 +154,8 @@
       Your browser does not support the audio element.
     </audio>
     <div class="audio-controls">
-      <button onclick="rewind(5)">Rewind 5s (X|C|V)</button></button>
-      <button onclick="rewind(10)">Rewind 10s (B)</button>
+      <button onclick="rewind(10)">Rewind 10s (Z)</button>
+      <button onclick="rewind(5)">Rewind 5s (X|C|V)</button>
       <button onclick="rewind(-10)">Next 10s (N)</button>
       <button onclick="rewind(-30)">Next 30s (M)</button>
       <button onclick="togglePause()">Pause/Play (SPACE)</button>
@@ -267,7 +267,7 @@
 				event.code === 'KeyC' ||
 				event.code === 'KeyV') {
         rewind(5);
-      } else if (event.code === 'KeyB') {
+      } else if (event.code === 'KeyZ') {
         rewind(10);
       } else if (event.code === 'KeyN') {
         rewind(-10);
